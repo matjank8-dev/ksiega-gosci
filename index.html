@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+  <meta charset="UTF-8">
+  <title>Księga gości</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      max-width: 800px;
+      margin: auto;
+      padding: 20px;
+      background: #f5f5f5;
+    }
+    h1 { text-align: center; }
+    form {
+      background: white;
+      padding: 15px;
+      border-radius: 6px;
+      margin-bottom: 20px;
+    }
+    input, textarea, button {
+      width: 100%;
+      padding: 10px;
+      margin-top: 10px;
+    }
+    button {
+      background: #007bff;
+      color: white;
+      border: none;
+      cursor: pointer;
+    }
+    .entry {
+      background: white;
+      padding: 10px;
+      margin-bottom: 10px;
+      border-radius: 6px;
+    }
+    .date {
+      font-size: 12px;
+      color: gray;
+    }
+  </style>
+</head>
+<body>
+
+<h1>Księga gości</h1>
+
+<form id="guestForm">
+  <input type="text" id="name" placeholder="Imię gościa" required>
+  <textarea id="message" placeholder="Opinia / wpis" required></textarea>
+  <button type="submit">Dodaj wpis</button>
+</form>
+
+<div id="entries"></div>
+
+<!-- Firebase -->
+<script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore-compat.js"></script>
+
+<script>
+  const firebaseConfig = {
+  apiKey: "AIzaSyDcab5b-0Q1JaSTF8pJgVAGljWDefM4R5M",
+  authDomain: "ksiega-gosci-hotel.firebaseapp.com",
+  projectId: "ksiega-gosci-hotel"
+  };
+
+  firebase.initializeApp(firebaseConfig);
+  const db = firebase.firestore();
+
+  const form = document.getElementById("guestForm");
+  const entries = document.getElementById("entries");
+
+  // Dodawanie wpisu
+  form.addEventListener("submit", function(e) {
+    e.preventDefault();
+    db.collection("guests").add({
+      name: name.value,
+      message: message.value,
+      created: firebase.firestore.FieldValue.serverTimestamp()
+    });
+    form.reset();
+  });
+
+  // Pobieranie wpisów
+  db.collection("guests")
+    .orderBy("created", "desc")
+    .onSnapshot(snapshot => {
+      entries.innerHTML = "";
+      snapshot.forEach(doc => {
+        const data = doc.data();
+        entries.innerHTML += `
+          <div class="entry">
+            <strong>${data.name}</strong>
+            <div class="date">${data.created?.toDate().toLocaleString()}</div>
+            <p>${data.message}</p>
+          </div>
+        `;
+      });
+    });
+</script>
+
+</body>
+</html>
