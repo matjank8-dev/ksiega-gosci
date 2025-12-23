@@ -70,17 +70,22 @@
 
   const form = document.getElementById("guestForm");
   const entries = document.getElementById("entries");
+  const nameInput = document.getElementById("name");
+  const messageInput = document.getElementById("message");
 
   // Dodawanie wpisu
-  form.addEventListener("submit", function(e) {
-    e.preventDefault();
-    db.collection("guests").add({
-      name: name.value,
-      message: message.value,
-      created: firebase.firestore.FieldValue.serverTimestamp()
-    });
-    form.reset();
+form.addEventListener("submit", function(e) {
+  e.preventDefault();
+
+  db.collection("guests").add({
+    name: nameInput.value,
+    message: messageInput.value,
+    created: firebase.firestore.FieldValue.serverTimestamp()
   });
+
+  form.reset();
+});
+
 
   // Pobieranie wpisów
   db.collection("guests")
@@ -102,3 +107,4 @@
 
 </body>
 </html>
+
