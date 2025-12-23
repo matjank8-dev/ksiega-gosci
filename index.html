@@ -42,27 +42,13 @@
     }
   </style>
 </head>
-  <style>
-body {
-  margin: 0;
-  font-family: Arial, sans-serif;
-  min-height: 100vh;
-
-  background: url("tlo.jpg") no-repeat center center fixed;
-  background-size: cover;
-}
-</style>
-
 <body>
 
-<div class="card">
-  <h1>Księga gości</h1>
+<h1>Księga gości</h1>
 
-  <form id="guestForm">
-
+<form id="guestForm">
   <input type="text" id="name" placeholder="Imię gościa" required>
   <textarea id="message" placeholder="Opinia / wpis" required></textarea>
-
   <button type="submit">Dodaj wpis</button>
 </form>
 
@@ -91,12 +77,11 @@ body {
 form.addEventListener("submit", function(e) {
   e.preventDefault();
 
-db.collection("guests").add({
-  name: nameInput.value,
-  message: messageInput.value,
-  created: firebase.firestore.FieldValue.serverTimestamp()
-});
-
+  db.collection("guests").add({
+    name: nameInput.value,
+    message: messageInput.value,
+    created: firebase.firestore.FieldValue.serverTimestamp()
+  });
 
   form.reset();
 });
@@ -109,26 +94,17 @@ db.collection("guests").add({
       entries.innerHTML = "";
       snapshot.forEach(doc => {
         const data = doc.data();
-entries.innerHTML += `
-  <div class="entry">
-    <strong>${data.name}</strong>
-    <div class="date">${data.created?.toDate().toLocaleString()}</div>
-    <p>${data.message}</p>
-  </div>
-`;
-
+        entries.innerHTML += `
+          <div class="entry">
+            <strong>${data.name}</strong>
+            <div class="date">${data.created?.toDate().toLocaleString()}</div>
+            <p>${data.message}</p>
+          </div>
         `;
       });
     });
-
 </script>
 
-</div>
 </body>
 </html>
-
-
-
-
-
 
