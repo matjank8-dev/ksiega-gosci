@@ -5,21 +5,6 @@
   <title>Księga gości</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <style>
-    .rating {
-  margin: 10px 0;
-}
-
-.rating label {
-  display: block;
-  margin-bottom: 5px;
-  font-weight: bold;
-}
-
-.rating select {
-  padding: 6px;
-  border-radius: 6px;
-}
-
     body {
       font-family: Arial, sans-serif;
       max-width: 800px;
@@ -77,17 +62,6 @@ body {
 
   <input type="text" id="name" placeholder="Imię gościa" required>
   <textarea id="message" placeholder="Opinia / wpis" required></textarea>
-    <div class="rating">
-  <label>Ocena:</label>
-  <select id="rating" required>
-    <option value="">Wybierz</option>
-    <option value="5">⭐⭐⭐⭐⭐</option>
-    <option value="4">⭐⭐⭐⭐</option>
-    <option value="3">⭐⭐⭐</option>
-    <option value="2">⭐⭐</option>
-    <option value="1">⭐</option>
-  </select>
-</div>
 
   <button type="submit">Dodaj wpis</button>
 </form>
@@ -112,7 +86,6 @@ body {
   const entries = document.getElementById("entries");
   const nameInput = document.getElementById("name");
   const messageInput = document.getElementById("message");
-  const ratingInput = document.getElementById("rating");
 
   // Dodawanie wpisu
 form.addEventListener("submit", function(e) {
@@ -121,7 +94,6 @@ form.addEventListener("submit", function(e) {
 db.collection("guests").add({
   name: nameInput.value,
   message: messageInput.value,
-  rating: Number(ratingInput.value),
   created: firebase.firestore.FieldValue.serverTimestamp()
 });
 
@@ -140,7 +112,6 @@ db.collection("guests").add({
 entries.innerHTML += `
   <div class="entry">
     <strong>${data.name}</strong>
-    <div class="stars">${"⭐".repeat(data.rating || 0)}</div>
     <div class="date">${data.created?.toDate().toLocaleString()}</div>
     <p>${data.message}</p>
   </div>
@@ -149,17 +120,13 @@ entries.innerHTML += `
         `;
       });
     });
-    .stars {
-  color: gold;
-  margin: 5px 0;
-  font-size: 18px;
-}
 
 </script>
 
 </div>
 </body>
 </html>
+
 
 
 
